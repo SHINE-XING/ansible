@@ -1,0 +1,33 @@
+---
+- hosts: web
+  tasks: 
+    - name: install nfs-utils
+      yum:
+        name: nfs-utils
+        state: present
+- hosts: web01
+  tasks:
+    - name: create nfs dir
+      file:
+        path: /tmp/nfs
+        state: directory
+    - name: config nfs server
+      template:
+        src: /etc/ansible/exports.j2
+        dest: /etc/exports
+    - name: start nfs server
+      systemd:
+        name: nfs
+        state: started
+- hosts: web02
+  tasks:
+    - name: create dir
+      file:
+        path: /tmp/data
+        state: directory
+    - name: mount nfs dir
+      mount:
+        path: /tmp/data
+        src: "192.168.237.178:/tmp/nfs"
+        fstype: nfs
+        state: mounted

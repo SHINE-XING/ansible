@@ -1,0 +1,8 @@
+---
+- hosts: web
+  tasks:
+    - name: print mount status
+      debug:
+        msg: 
+          - "今天是{{ ansible_date_time.weekday }}"
+          - "时间是{{ ansible_date_time.time }}"

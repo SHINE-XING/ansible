@@ -1,0 +1,13 @@
+---
+- hosts: web01
+  tasks:
+    - name: check httpd
+      shell: /usr/sbin/httpd -t
+      register: httpd_check
+      changed_when:
+        - httpd_check.stdout.find('OK')
+        - false
+    - name: start httpd
+      systemd:
+        name: httpd
+        state: started  

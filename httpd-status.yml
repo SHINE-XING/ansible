@@ -1,0 +1,21 @@
+---
+- hosts: web
+  tasks:
+    - name: check httpd server
+      command: systemctl is-active httpd
+      ignore_errors: yes
+      register: check_httpd
+    - name: debug print
+      debug:
+        msg: "{{ check_httpd.rc }}"
+    #- name: httpd restart
+    #  systemd:
+    #    name: httpd
+    #    state: started
+    #  when: check_httpd.rc != 0
+    - name: httpd stop
+      systemd:
+        name: httpd
+        state: stopped
+      when: 
+         ansible_hostname == "mq-02" and ansible_user_gid == 0

@@ -1,0 +1,41 @@
+---
+#- hosts: web
+#  tasks:
+#   - name: install httpd server
+#     yum:
+#       name: httpd
+#       state: present
+- hosts: web
+  #vars_files:
+  #  - ./html
+  vars: 
+    html_package: 
+      web1: 我是web01，从文件里写的变量
+      web2: 我是web02，从文件里写的变量
+  tasks:
+   - name: config index.html
+     copy:
+       content: "{{ item.web }}"
+       dest: /var/www/html/index.html
+     loop:
+       - { web: "{{ html_package.web1 }}" }
+       - { web: "{{ html_package.web2 }}" }
+   - name: start httpd
+     systemd:
+       name: httpd
+       state: started
+#- hosts: web02
+  #vars_files:
+  #  - ./html
+  #vars: 
+  #  html_package: 我是web02，从文件里写的变量
+  #tasks:
+  # - name: config index.html
+  #   copy:
+  #     content: "{{ html_package.web2 }}"
+  #     dest: /var/www/html/index.html
+  # - name: start httpd
+  #   systemd:
+  #     name: httpd
+  #     state: started
+
